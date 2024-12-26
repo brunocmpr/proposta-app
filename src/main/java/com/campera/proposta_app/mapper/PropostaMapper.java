@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface PropostaMapper {
 
-//    PropostaMapper INSTANCE = Mappers.getMapper(PropostaMapper.class);
+    PropostaMapper INSTANCE = Mappers.getMapper(PropostaMapper.class);
 
     @Mapping(target = "usuario.nome", source = "nome")
     @Mapping(target = "usuario.sobrenome", source = "sobrenome")

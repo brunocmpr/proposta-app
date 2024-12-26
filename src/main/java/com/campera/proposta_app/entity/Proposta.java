@@ -20,7 +20,7 @@ public class Proposta {
 
     private Double valorSolicitado;
 
-    private int prazoPagamento;
+    private Integer prazoPagamento;
 
     private Boolean aprovada;
 
