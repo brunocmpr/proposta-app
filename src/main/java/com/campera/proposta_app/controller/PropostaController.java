@@ -26,4 +26,10 @@ public class PropostaController {
                         .toUri())
                 .body(response);
     }
+
+    @GetMapping
+    public ResponseEntity<List<PropostaResponseDto>> obterProposta(){
+        return ResponseEntity.ok(propostaService.obterProposta());
+    }
+
 }

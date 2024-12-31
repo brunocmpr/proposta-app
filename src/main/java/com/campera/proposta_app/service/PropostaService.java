@@ -25,4 +25,8 @@ public class PropostaService {
 
         return PropostaMapper.INSTANCE.convertEntityToDto(proposta);
     }
+
+    public List<PropostaResponseDto> obterProposta() {
+        return PropostaMapper.INSTANCE.convertListEntityToListDto(propostaRepository.findAll());
+    }
 }
