@@ -1,12 +1,10 @@
 package com.campera.proposta_app.service;
 
-import com.campera.proposta_app.config.RabbitMQConfiguration;
 import com.campera.proposta_app.dto.PropostaRequestDto;
 import com.campera.proposta_app.dto.PropostaResponseDto;
 import com.campera.proposta_app.entity.Proposta;
 import com.campera.proposta_app.repository.PropostaRepository;
 import com.campera.proposta_app.mapper.PropostaMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +31,18 @@ public class PropostaService {
         Proposta proposta = PropostaMapper.INSTANCE.convertDtoToProposta(requestDto);
         propostaRepository.save(proposta);
 
-        PropostaResponseDto response = PropostaMapper.INSTANCE.convertEntityToDto(proposta);
-        notificacaoService.notificar(response, this.exchange);
-        return response;
+        notificarRabbitMq(proposta);
+
+        return PropostaMapper.INSTANCE.convertEntityToDto(proposta);
+    }
+
+    private void notificarRabbitMq(Proposta proposta){
+        try {
+            notificacaoService.notificar(proposta, this.exchange);
+        } catch (RuntimeException e) {
+            proposta.setIntegrada(false);
+            propostaRepository.save(proposta);
+        }
     }
 
     public List<PropostaResponseDto> obterProposta() {
