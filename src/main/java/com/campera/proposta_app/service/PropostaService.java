@@ -13,18 +13,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class PropostaService {
 
     private final PropostaRepository propostaRepository;
     private final NotificacaoService notificacaoService;
+
+
+    private String exchange;
+
+    public PropostaService(PropostaRepository propostaRepository
+            , NotificacaoService notificacaoService
+            , @Value("${rabbitmq.propostapendente.exchange}") String exchange) {
+        this.propostaRepository = propostaRepository;
+        this.notificacaoService = notificacaoService;
+        this.exchange = exchange;
+    }
 
     public PropostaResponseDto criar(PropostaRequestDto requestDto) {
         Proposta proposta = PropostaMapper.INSTANCE.convertDtoToProposta(requestDto);
         propostaRepository.save(proposta);
 
         PropostaResponseDto response = PropostaMapper.INSTANCE.convertEntityToDto(proposta);
-        notificacaoService.notificar(response, RabbitMQConfiguration.EXCHANGE_PENDENTE);
+        notificacaoService.notificar(response, this.exchange);
         return response;
     }
 
