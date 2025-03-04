@@ -18,8 +18,12 @@ public class PropostaPendenteListener {
 
     @RabbitListener(queues = "${rabbitmq.queue.proposta.concluida}")
     public void propostaEmAnalise(Proposta proposta) {
-        propostaRepository.save(proposta);
+        atualizarProposta(proposta);
         PropostaResponseDto propostaResponseDto = PropostaMapper.INSTANCE.convertEntityToDto(proposta);
         webSocketService.notificar(propostaResponseDto);
+    }
+
+    private void atualizarProposta(Proposta proposta) {
+        propostaRepository.atualizarProposta(proposta.getId(), proposta.getAprovada(), proposta.getObservacao());
     }
 }
