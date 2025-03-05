@@ -64,6 +64,13 @@ public class RabbitMQConfiguration {
         return ExchangeBuilder.fanoutExchange(exchangeDlqPendente).build();
     }
 
+    @Bean
+    public Binding criarBindingPropostaPendenteDlq(){
+        return BindingBuilder
+                .bind(criarFilaPropostaPendenteDlq())
+                .to(deadLetterExchange());
+    }
+
     public RabbitMQConfiguration(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
